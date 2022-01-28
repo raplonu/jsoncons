@@ -1,0 +1,62 @@
+Testcase id: 126875
+Job: jsoncons_libfuzzer_ubsan
+Crash Type: Integer-overflow
+isSecurity: False
+Crash state: jsoncons::basic_bigint<std::__1::allocator<unsigned char> >::operator long
+jsoncons::msgpack::basic_msgpack_encoder<jsoncons::bytes_sink<std::__1::vector<u
+jsoncons::basic_json_visitor<char>::string_value
+Poc: 126875.testcase
+engine: libFuzzer
+fully_qualified_name: libFuzzer_fuzz_msgpack_encoder
+target: fuzz_msgpack_encoder
+name: libFuzzer
+[Environment] UBSAN_OPTIONS=exitcode=77:print_stacktrace=1:silence_unsigned_overflow=1
++----------------------------------------Release Build Stacktrace----------------------------------------+
+Command: /clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder -rss_limit_mb=2560 -timeout=60 -runs=100 /clusterfuzz/run_bot/clusterfuzz/bot/inputs/fuzzer-testcases/e99813b3173ff32701c22624d0b92b312e5bc8d285456b72bb808cc63f42141a
+Time ran: 0.011091232299804688
+
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 1268401300
+INFO: Loaded 1 modules   (5143 inline 8-bit counters): 5143 [0x5f4668, 0x5f5a7f),
+INFO: Loaded 1 PC tables (5143 PCs): 5143 [0x57ab28,0x58ec98),
+/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder: Running 1 inputs 100 time(s) each.
+Running: /clusterfuzz/run_bot/clusterfuzz/bot/inputs/fuzzer-testcases/e99813b3173ff32701c22624d0b92b312e5bc8d285456b72bb808cc63f42141a
+include/jsoncons/bigint.hpp:899:31: runtime error: negation of -9223372036854775808 cannot be represented in type &#x27;int64_t&#x27; (aka &#x27;long&#x27;); cast to an unsigned type to negate this value to itself
+    #0 0x4e2be1 in jsoncons::basic_bigint&lt;std::__1::allocator&lt;unsigned char&gt; &gt;::operator long() const /src/jsoncons/include/jsoncons/bigint.hpp:899:31
+    #1 0x4d7969 in jsoncons::msgpack::basic_msgpack_encoder&lt;jsoncons::bytes_sink&lt;std::__1::vector&lt;unsigned char, std::__1::allocator&lt;unsigned char&gt; &gt;, void&gt;, std::__1::allocator&lt;char&gt; &gt;::visit_string(jsoncons::detail::basic_string_view&lt;char, std::__1::char_traits&lt;char&gt; &gt; const&amp;, jsoncons::semantic_tag, jsoncons::ser_context const&amp;, std::__1::error_code&amp;) /src/jsoncons/include/jsoncons_ext/msgpack/msgpack_encoder.hpp:317:64
+    #2 0x4c6b62 in jsoncons::basic_json_visitor&lt;char&gt;::string_value(jsoncons::detail::basic_string_view&lt;char, std::__1::char_traits&lt;char&gt; &gt; const&amp;, jsoncons::semantic_tag, jsoncons::ser_context const&amp;, std::__1::error_code&amp;) /src/jsoncons/include/jsoncons/json_visitor.hpp:306:20
+    #3 0x4ba8f1 in jsoncons::basic_json_visitor2_to_visitor_adaptor&lt;char, std::__1::allocator&lt;char&gt; &gt;::visit_string(jsoncons::detail::basic_string_view&lt;char, std::__1::char_traits&lt;char&gt; &gt; const&amp;, jsoncons::semantic_tag, jsoncons::ser_context const&amp;, std::__1::error_code&amp;) /src/jsoncons/include/jsoncons/json_visitor2.hpp:1075:48
+    #4 0x4f1d02 in jsoncons::basic_json_visitor2&lt;char&gt;::string_value(jsoncons::detail::basic_string_view&lt;char, std::__1::char_traits&lt;char&gt; &gt; const&amp;, jsoncons::semantic_tag, jsoncons::ser_context const&amp;, std::__1::error_code&amp;) /src/jsoncons/include/jsoncons/json_visitor2.hpp:305:20
+    #5 0x4ee97c in jsoncons::msgpack::basic_msgpack_parser&lt;jsoncons::stream_source&lt;unsigned char&gt;, std::__1::allocator&lt;char&gt; &gt;::read_item(jsoncons::basic_json_visitor2&lt;char&gt;&amp;, std::__1::error_code&amp;) /src/jsoncons/include/jsoncons_ext/msgpack/msgpack_parser.hpp:562:41
+    #6 0x4e9e9a in jsoncons::msgpack::basic_msgpack_parser&lt;jsoncons::stream_source&lt;unsigned char&gt;, std::__1::allocator&lt;char&gt; &gt;::parse(jsoncons::basic_json_visitor2&lt;char&gt;&amp;, std::__1::error_code&amp;) /src/jsoncons/include/jsoncons_ext/msgpack/msgpack_parser.hpp:169:21
+    #7 0x4b4628 in jsoncons::msgpack::basic_msgpack_reader&lt;jsoncons::stream_source&lt;unsigned char&gt;, std::__1::allocator&lt;char&gt; &gt;::read(std::__1::error_code&amp;) /src/jsoncons/include/jsoncons_ext/msgpack/msgpack_reader.hpp:87:17
+    #8 0x4b41b1 in LLVMFuzzerTestOneInput /src/jsoncons/fuzzers/fuzz_msgpack_encoder.cpp:19:12
+    #9 0x43fce3 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) cxa_noexception.cpp:0
+    #10 0x42b5f2 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #11 0x4310ba in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) cxa_noexception.cpp:0
+    #12 0x459fe2 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #13 0x7faf0cb420b2 in __libc_start_main
+    #14 0x40887d in _start
+
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior include/jsoncons/bigint.hpp:899:31 in
+
+
++----------------------------------------Release Build Unsymbolized Stacktrace (diff)----------------------------------------+
+
+Running: /clusterfuzz/run_bot/clusterfuzz/bot/inputs/fuzzer-testcases/e99813b3173ff32701c22624d0b92b312e5bc8d285456b72bb808cc63f42141a
+include/jsoncons/bigint.hpp:899:31: runtime error: negation of -9223372036854775808 cannot be represented in type &#x27;int64_t&#x27; (aka &#x27;long&#x27;); cast to an unsigned type to negate this value to itself
+    #0 0x4e2be1  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x4e2be1)
+    #1 0x4d7969  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x4d7969)
+    #2 0x4c6b62  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x4c6b62)
+    #3 0x4ba8f1  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x4ba8f1)
+    #4 0x4f1d02  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x4f1d02)
+    #5 0x4ee97c  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x4ee97c)
+    #6 0x4e9e9a  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x4e9e9a)
+    #7 0x4b4628  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x4b4628)
+    #8 0x4b41b1  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x4b41b1)
+    #9 0x43fce3  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x43fce3)
+    #10 0x42b5f2  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x42b5f2)
+    #11 0x4310ba  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x4310ba)
+    #12 0x459fe2  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x459fe2)
+    #13 0x7faf0cb420b2  (/lib/x86_64-linux-gnu/libc.so.6+0x270b2)
+    #14 0x40887d  (/clusterfuzz/run_bot/clusterfuzz/bot/builds/jsoncons_libfuzzer_ubsan/custom/fuzz_msgpack_encoder+0x40887d)
