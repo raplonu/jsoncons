@@ -58,7 +58,7 @@ endif()
 
 target_include_directories (catch INTERFACE ${CATCH_INCLUDE_DIR})
 
-add_executable(unit_tests 
+add_executable(unit_tests
                bson/src/bson_cursor_tests.cpp
                bson/src/bson_encoder_tests.cpp
                bson/src/bson_reader_tests.cpp
@@ -186,7 +186,7 @@ target_compile_options(unit_tests PRIVATE
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "8.0")
     message(STATUS Version " ${CMAKE_CXX_COMPILER_VERSION}")
-    # older GCC versions don't support 
+    # older GCC versions don't support
    target_compile_options(unit_tests PRIVATE
        $<$<CXX_COMPILER_ID:GNU>:-Wnon-virtual-dtor -Werror -Wall -Wextra -Wcast-align -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -pedantic -Wnonnull -Werror=nonnull>
    )
@@ -201,8 +201,8 @@ endif()
 add_test(jsoncons unit_tests
          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/test)
 
-target_include_directories (unit_tests 
-                            PUBLIC ${JSONCONS_INCLUDE_DIR} 
+target_include_directories (unit_tests
+                            PUBLIC ${JSONCONS_INCLUDE_DIR}
                             PRIVATE ${JSONCONS_TESTS_DIR}
                             PRIVATE ${JSONCONS_THIRD_PARTY_INCLUDE_DIR})
 
